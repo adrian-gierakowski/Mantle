@@ -8,6 +8,11 @@
 
 #import <CoreData/CoreData.h>
 
+typedef NS_ENUM(NSInteger, MTLManagedObjectToManyRelationshipMergePolicy) {
+  MTLManagedObjectToManyRelationshipMergePolicyOverwrite = 0,
+  MTLManagedObjectToManyRelationshipMergePolicyAdd
+};
+
 @class MTLModel;
 
 // A MTLModel object that supports being serialized to and from Core Data as an
