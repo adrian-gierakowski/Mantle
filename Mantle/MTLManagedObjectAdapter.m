@@ -452,11 +452,26 @@ static id performInContext(NSManagedObjectContext *context, id (^block)(void)) {
 					return NO;
 				}
 
+				MTLManagedObjectToManyRelationshipMergePolicy mergePolicy = MTLManagedObjectToManyRelationshipMergePolicyOverwrite;
+				
+				if ([self.modelClass respondsToSelector:@selector(mergePolicyForManagedObjectsToManyRelationshipName:)]) {
+					mergePolicy = [self.modelClass mergePolicyForManagedObjectsToManyRelationshipName:managedObjectKey];
+				}
+				
 				id relationshipCollection;
-				if ([relationshipDescription isOrdered]) {
-					relationshipCollection = [NSMutableOrderedSet orderedSet];
-				} else {
-					relationshipCollection = [NSMutableSet set];
+				
+				if (MTLManagedObjectToManyRelationshipMergePolicyOverwrite == mergePolicy) {
+					if ([relationshipDescription isOrdered]) {
+						relationshipCollection = [NSMutableOrderedSet orderedSet];
+					} else {
+						relationshipCollection = [NSMutableSet set];
+					}
+				} else if (MTLManagedObjectToManyRelationshipMergePolicyAdd == mergePolicy) {
+					if ([relationshipDescription isOrdered]) {
+						relationshipCollection = [managedObject mutableOrderedSetValueForKey:managedObjectKey];
+					} else {
+						relationshipCollection = [managedObject mutableSetValueForKey:managedObjectKey];
+					}
 				}
 
 				for (MTLModel *model in value) {

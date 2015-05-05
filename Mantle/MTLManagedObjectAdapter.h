@@ -103,6 +103,17 @@
 // be used.
 + (NSDictionary *)relationshipModelClassesByPropertyKey;
 
+// Specifies how to deal with updating to many relationships
+// when saving MTLModel into core data results in updating an existing managed object
+// (this happens when utilising uniquing)
+//
+// MTLManagedObjectToManyRelationshipMergePolicyOverwrite:
+//     replaces objects in managed object with objects in MTLModel
+//
+// MTLManagedObjectToManyRelationshipMergePolicyAdd:
+//     adds objects from MTLModel to relationship in managed object
++ (MTLManagedObjectToManyRelationshipMergePolicy)mergePolicyForManagedObjectsToManyRelationshipName:(NSString *)relationshipName;
+
 // Overridden to deserialize a different class instead of the receiver, based on
 // information in the provided object.
 //
